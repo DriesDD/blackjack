@@ -9,7 +9,7 @@ class Blackjack
     private Player $player;
     private Player $dealer;
     private array $deck;
-    private bool $active = false;
+    private bool $active;
 
     public function getPlayer(): Player
     {
@@ -31,7 +31,7 @@ class Blackjack
                 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51
             ];
         shuffle($this->deck);
-
+        $this->active = false;
         $this->loadSession();
     }
 
@@ -53,7 +53,9 @@ class Blackjack
        }
        else
        {
-        if (($this->player->getScore() < 22) && (($this->dealer->getScore() > 21) || ($this->player->getScore() > $this->dealer->getScore())))
+        if (($this->player->getLost() == false) && 
+           ($this->player->getScore() < 22) && 
+           (($this->dealer->getScore() > 21) || ($this->player->getScore() > $this->dealer->getScore())))
         {
             echo("You win! </br>");
         }

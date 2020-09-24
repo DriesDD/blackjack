@@ -36,13 +36,10 @@ class Player
     }
 
     public function chooseMove()
-    {var_dump($this->game->getActive());
-
-        if ($this->getScore() < 16) {
+    {   if ($this->getScore() < 16) {
             $this->hit(1);
             return true;
         } else {
-            var_dump($this->game->getActive());
             return false;
         }
     }
@@ -61,8 +58,8 @@ class Player
         return $score;
     }
 
-    public function hasLost(): bool
+    public function getLost(): bool
     {
-        return $lost;
+        return $this->lost;
     }
 }

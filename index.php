@@ -14,17 +14,14 @@ if (isset($_POST['Start'])) {
     $game->printHands();
     $game->saveSession();
     }
+
 if (isset($_POST['Hit'])) {
-    $game->setActive(true);
     $game->getPlayer()->hit(1);
     $game->getDealer()->chooseMove();
-        //issue: active changes to 'true' between choosemove and printhands
-    var_dump($game->getActive());
     $game->printHands();
     $game->saveSession();
 }
 if (isset($_POST['Stand'])) {
-    $game->setActive(true);
     $bothStand = false;
     if ($game->getDealer()->chooseMove() == false) {$bothStand = true;}
     $game->printHands();
@@ -33,6 +30,7 @@ if (isset($_POST['Stand'])) {
 }
 if (isset($_POST['Surrender'])) {
     $game->setActive(false);
+    $game->getPlayer()->surrender();
     $game->printHands();
     $game->gameEnd();
     $game->saveSession();
