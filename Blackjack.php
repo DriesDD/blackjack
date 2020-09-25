@@ -25,14 +25,17 @@ class Blackjack
     {
         $this->deck =
             [
-                0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
+                 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12,
                 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25,
                 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38,
                 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51
             ];
         shuffle($this->deck);
-        $this->active = false;
         $this->loadSession();
+        if (($this->player->getLost() + $this->dealer->getLost()) == 0)
+        {$this->active = true;}
+        else
+        {$this->active = false;}        
     }
 
     public function gameStart()
@@ -50,6 +53,8 @@ class Blackjack
        if (min(22,$this->player->getScore()) == min(22,$this->dealer->getScore()))
        {
            echo("It's a tie. </br>");
+           $this->dealer->surrender();
+           $this->player->surrender();
        }
        else
        {
@@ -58,13 +63,16 @@ class Blackjack
            (($this->dealer->getScore() > 21) || ($this->player->getScore() > $this->dealer->getScore())))
         {
             echo("You win! </br>");
+            $this->dealer->surrender();
         }
         else
         {
             echo("Opponent wins! </br>");
+            $this->player->surrender();
         }
        }
        $this->active = false;
+
     }
 
     public function saveSession()
@@ -92,8 +100,8 @@ class Blackjack
     public function printHands()
     {
         foreach ([$this->player, $this->dealer] as $player) {
-            $namedHand = array_map([$this, 'cardGetName'], $player->getHand());
-            echo ($player->getRole() . ' drew ' . implode(' and ', $namedHand) . ' for a total score of ' . $player->getScore() . '</br>');
+            $namedHand = array_map([$this, 'cardGetFileName'], $player->getHand());
+            echo (ucfirst($player->getRole()) . ': <img src="' . implode('" alt= "Italian Trulli"> <img src="', $namedHand) . '" alt= "Italian Trulli"> for a total score of ' . $player->getScore() . '</br>');
         }
     }
 
@@ -104,6 +112,12 @@ class Blackjack
         $suit = floor($index / 13);
         $suit = ["Spades", "Hearts", "Diamonds", "Clubs"][$suit];
         return ($number . " of " . $suit);
+    }
+
+    private function cardGetFileName(int $index): string
+    {
+        $number = $index +1;
+        return ("img/" . $number . ".png");
     }
 
     public function getActive() : bool
