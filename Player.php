@@ -53,7 +53,7 @@ class Player
     {
         $score = 0;
         foreach ($this->hand as $value) {
-            $score += min(10, $value % 13);
+            $score += 1+ min(9, $value % 13);
         }
         return $score;
     }
